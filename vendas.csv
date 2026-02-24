@@ -1,0 +1,6 @@
+codigoVenda,cliente,produto,quantidade,precoUnitario,data
+1,Ana,Notebook,1,3500.00,2024-03-01
+2,Bruno,Mouse,2,80.00,2024-03-01
+3,Carlos,Teclado,1,150.00,2024-03-02
+4,Ana,Mouse,1,80.00,2024-03-03
+5,Bruno,Monitor,1,1200.00,2024-03-03
