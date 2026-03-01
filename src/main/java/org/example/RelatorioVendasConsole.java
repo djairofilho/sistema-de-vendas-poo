@@ -1,7 +1,10 @@
 package org.example;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class RelatorioVendasConsole {
     public void imprimirTodasAsVendas(SistemaVendas sistema) {
@@ -19,9 +22,11 @@ public class RelatorioVendasConsole {
         System.out.printf("Valor medio por venda: %.2f%n%n", sistema.getValorMedioPorVenda());
 
         System.out.println("=== ESTATISTICAS POR CLIENTE ===");
-        sistema.getClienteQueMaisGastou().ifPresent(cliente ->
-                System.out.printf("Cliente que mais gastou: %s (%.2f)%n", cliente.getNome(), cliente.getTotalGasto()));
-        if (sistema.getClienteQueMaisGastou().isEmpty()) {
+        Optional<Cliente> clienteQueMaisGastou = sistema.getClienteQueMaisGastou();
+        if (clienteQueMaisGastou.isPresent()) {
+            Cliente cliente = clienteQueMaisGastou.get();
+            System.out.printf("Cliente que mais gastou: %s (%.2f)%n", cliente.getNome(), cliente.getTotalGasto());
+        } else {
             System.out.println("Cliente que mais gastou: N/A");
         }
 
@@ -33,15 +38,19 @@ public class RelatorioVendasConsole {
         System.out.println();
 
         System.out.println("=== ESTATISTICAS POR PRODUTO ===");
-        sistema.getProdutoMaisVendido().ifPresent(produto ->
-                System.out.printf("Produto mais vendido: %s (%d itens)%n", produto.getNome(), produto.getTotalVendido()));
-        if (sistema.getProdutoMaisVendido().isEmpty()) {
+        Optional<Produto> produtoMaisVendido = sistema.getProdutoMaisVendido();
+        if (produtoMaisVendido.isPresent()) {
+            Produto produto = produtoMaisVendido.get();
+            System.out.printf("Produto mais vendido: %s (%d itens)%n", produto.getNome(), produto.getTotalVendido());
+        } else {
             System.out.println("Produto mais vendido: N/A");
         }
 
-        sistema.getProdutoMaiorFaturamento().ifPresent(produto ->
-                System.out.printf("Produto com maior faturamento: %s (%.2f)%n", produto.getNome(), produto.getFaturamento()));
-        if (sistema.getProdutoMaiorFaturamento().isEmpty()) {
+        Optional<Produto> produtoMaiorFaturamento = sistema.getProdutoMaiorFaturamento();
+        if (produtoMaiorFaturamento.isPresent()) {
+            Produto produto = produtoMaiorFaturamento.get();
+            System.out.printf("Produto com maior faturamento: %s (%.2f)%n", produto.getNome(), produto.getFaturamento());
+        } else {
             System.out.println("Produto com maior faturamento: N/A");
         }
 
@@ -53,16 +62,18 @@ public class RelatorioVendasConsole {
     }
 
     private void imprimirMapaDoubleOrdenado(Map<String, Double> mapa) {
-        mapa.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey(Comparator.naturalOrder()))
-                .forEach(entry -> System.out.printf("- %s: %.2f%n", entry.getKey(), entry.getValue()));
+        List<String> chaves = new ArrayList<>(mapa.keySet());
+        Collections.sort(chaves);
+        for (String chave : chaves) {
+            System.out.printf("- %s: %.2f%n", chave, mapa.get(chave));
+        }
     }
 
     private void imprimirMapaIntOrdenado(Map<String, Integer> mapa) {
-        mapa.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey(Comparator.naturalOrder()))
-                .forEach(entry -> System.out.printf("- %s: %d%n", entry.getKey(), entry.getValue()));
+        List<String> chaves = new ArrayList<>(mapa.keySet());
+        Collections.sort(chaves);
+        for (String chave : chaves) {
+            System.out.printf("- %s: %d%n", chave, mapa.get(chave));
+        }
     }
 }

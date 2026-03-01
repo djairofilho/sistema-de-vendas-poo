@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +32,19 @@ public class SistemaVendas {
     }
 
     public double getFaturamentoTotal() {
-        return vendas.stream().mapToDouble(Venda::getTotal).sum();
+        double total = 0.0;
+        for (Venda venda : vendas) {
+            total += venda.getTotal();
+        }
+        return total;
     }
 
     public int getQuantidadeTotalItensVendidos() {
-        return vendas.stream().mapToInt(Venda::getQuantidade).sum();
+        int totalItens = 0;
+        for (Venda venda : vendas) {
+            totalItens += venda.getQuantidade();
+        }
+        return totalItens;
     }
 
     public double getValorMedioPorVenda() {
@@ -48,9 +55,13 @@ public class SistemaVendas {
     }
 
     public Optional<Cliente> getClienteQueMaisGastou() {
-        return clientes.values()
-                .stream()
-                .max(Comparator.comparingDouble(Cliente::getTotalGasto));
+        Cliente clienteComMaiorGasto = null;
+        for (Cliente cliente : clientes.values()) {
+            if (clienteComMaiorGasto == null || cliente.getTotalGasto() > clienteComMaiorGasto.getTotalGasto()) {
+                clienteComMaiorGasto = cliente;
+            }
+        }
+        return Optional.ofNullable(clienteComMaiorGasto);
     }
 
     public Map<String, Double> getTotalGastoPorCliente() {
@@ -70,15 +81,23 @@ public class SistemaVendas {
     }
 
     public Optional<Produto> getProdutoMaisVendido() {
-        return produtos.values()
-                .stream()
-                .max(Comparator.comparingInt(Produto::getTotalVendido));
+        Produto produtoMaisVendido = null;
+        for (Produto produto : produtos.values()) {
+            if (produtoMaisVendido == null || produto.getTotalVendido() > produtoMaisVendido.getTotalVendido()) {
+                produtoMaisVendido = produto;
+            }
+        }
+        return Optional.ofNullable(produtoMaisVendido);
     }
 
     public Optional<Produto> getProdutoMaiorFaturamento() {
-        return produtos.values()
-                .stream()
-                .max(Comparator.comparingDouble(Produto::getFaturamento));
+        Produto produtoMaiorFaturamento = null;
+        for (Produto produto : produtos.values()) {
+            if (produtoMaiorFaturamento == null || produto.getFaturamento() > produtoMaiorFaturamento.getFaturamento()) {
+                produtoMaiorFaturamento = produto;
+            }
+        }
+        return Optional.ofNullable(produtoMaiorFaturamento);
     }
 
     public Map<String, Integer> getQuantidadeTotalVendidaPorProduto() {
